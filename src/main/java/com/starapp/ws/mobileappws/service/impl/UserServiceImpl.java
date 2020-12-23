@@ -1,7 +1,7 @@
 package com.starapp.ws.mobileappws.service.impl;
 
-import com.starapp.ws.mobileappws.UserRepository;
 import com.starapp.ws.mobileappws.io.entity.UserEntity;
+import com.starapp.ws.mobileappws.io.repositories.UserRepository;
 import com.starapp.ws.mobileappws.service.UserService;
 import com.starapp.ws.mobileappws.shared.Utils;
 import com.starapp.ws.mobileappws.shared.dto.UserDto;
@@ -45,10 +45,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto getUser(String email) {
+        UserEntity userEntity = userRepository.findUserByEmail(email);
+
+        if (userEntity == null) throw new UsernameNotFoundException(email);
+
+        UserDto returnValue = new UserDto();
+        BeanUtils.copyProperties(userEntity, returnValue);
+        return returnValue;
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserEntity userEntity = userRepository.findUserByEmail(email);
 
         if (userEntity == null) throw new UsernameNotFoundException(email);
+
 
         return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
     }

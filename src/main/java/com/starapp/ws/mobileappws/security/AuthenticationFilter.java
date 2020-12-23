@@ -1,6 +1,9 @@
 package com.starapp.ws.mobileappws.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.starapp.ws.mobileappws.SpringApplicationContext;
+import com.starapp.ws.mobileappws.service.UserService;
+import com.starapp.ws.mobileappws.shared.dto.UserDto;
 import com.starapp.ws.mobileappws.ui.model.request.UserLoginRequestModel;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -60,7 +63,11 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .signWith(SignatureAlgorithm.HS512, SecurityConstants.TOKEN_SECRET)
                 .compact();
 
+        UserService userService = (UserService) SpringApplicationContext.getBean("userServiceImpl");
+        UserDto userDto = userService.getUser(userName);
+
         response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
+        response.addHeader("UserID", userDto.getUserId());
     }
 
 
