@@ -1,4 +1,4 @@
-package com.starapp.ws.mobileappws;
+package com.starapp.ws.mobileappws.io.repositories;
 
 import com.starapp.ws.mobileappws.io.entity.UserEntity;
 import org.springframework.data.repository.CrudRepository;
