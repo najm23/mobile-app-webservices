@@ -23,8 +23,6 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain chain) throws IOException, ServletException {
-        super.doFilterInternal(request, response, chain);
-
         String header = request.getHeader((SecurityConstants.HEADER_STRING));
 
         if (header == null || !header.startsWith(SecurityConstants.TOKEN_PREFIX)) {
