@@ -4,6 +4,7 @@ package com.starapp.ws.mobileappws.ui.controller;
 import com.starapp.ws.mobileappws.service.UserService;
 import com.starapp.ws.mobileappws.shared.dto.UserDto;
 import com.starapp.ws.mobileappws.ui.model.request.UserDetailsRequestModel;
+import com.starapp.ws.mobileappws.ui.model.response.ErrorMessages;
 import com.starapp.ws.mobileappws.ui.model.response.UserRest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +32,11 @@ public class UserController {
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
-    public UserRest createUser(@RequestBody UserDetailsRequestModel userDetails) {
+    public UserRest createUser(@RequestBody UserDetailsRequestModel userDetails) throws Exception {
         UserRest returnValue = new UserRest();
+
+        if (userDetails.getFirstName().isEmpty())
+            throw new Exception(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
 
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(userDetails, userDto);
