@@ -31,13 +31,19 @@ public class UserController {
         return returnValue;
     }
 
-    @GetMapping(path = "/{userId}",
-            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public List<UserRest> getUsers(@RequestParam(value = "page", defaultValue = "1") int page,
+    @GetMapping(produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public List<UserRest> getUsers(@RequestParam(value = "page", defaultValue = "0") int page,
                                    @RequestParam(value = "limit", defaultValue = "25") int limit) {
         List<UserRest> returnValue = new ArrayList<>();
-        List<UserDto> userDtoList = userService.getUsers(page, limit);
-        BeanUtils.copyProperties(userDtoList, returnValue);
+
+        List<UserDto> users = userService.getUsers(page, limit);
+
+        for (UserDto userDto : users) {
+            UserRest userRest = new UserRest();
+            BeanUtils.copyProperties(userDto, userRest);
+            returnValue.add(userRest);
+        }
+
         return returnValue;
     }
 
