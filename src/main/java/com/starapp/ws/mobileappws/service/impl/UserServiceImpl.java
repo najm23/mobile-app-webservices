@@ -56,6 +56,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto updateUser(UserDto userDto) {
+        return null;
+    }
+
+    @Override
     public UserDto getUser(String email) {
         UserEntity userEntity = userRepository.findByEmail(email);
 
