@@ -1,10 +1,12 @@
 package com.starapp.ws.mobileappws.service.impl;
 
+import com.starapp.ws.mobileappws.exceptions.UserServiceException;
 import com.starapp.ws.mobileappws.io.entity.UserEntity;
 import com.starapp.ws.mobileappws.io.repositories.UserRepository;
 import com.starapp.ws.mobileappws.service.UserService;
 import com.starapp.ws.mobileappws.shared.Utils;
 import com.starapp.ws.mobileappws.shared.dto.UserDto;
+import com.starapp.ws.mobileappws.ui.model.response.ErrorMessages;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -56,8 +58,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto updateUser(UserDto userDto) {
-        return null;
+    public UserDto updateUser(String id, UserDto user) {
+        UserEntity userEntity = userRepository.findByUserId(id);
+
+        if (userEntity == null) throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+
+        userEntity.setFirstName(user.getFirstName());
+        userEntity.setLastName(user.getLastName());
+
+        UserEntity updaterUserDetails = userRepository.save(userEntity);
+
+        UserDto returnValue = new UserDto();
+        BeanUtils.copyProperties(updaterUserDetails, returnValue);
+
+        return returnValue;
     }
 
     @Override
