@@ -5,8 +5,7 @@ import com.starapp.ws.mobileappws.exceptions.UserServiceException;
 import com.starapp.ws.mobileappws.service.UserService;
 import com.starapp.ws.mobileappws.shared.dto.UserDto;
 import com.starapp.ws.mobileappws.ui.model.request.UserDetailsRequestModel;
-import com.starapp.ws.mobileappws.ui.model.response.ErrorMessages;
-import com.starapp.ws.mobileappws.ui.model.response.UserRest;
+import com.starapp.ws.mobileappws.ui.model.response.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -58,7 +57,7 @@ public class UserController {
         UserRest returnValue = new UserRest();
 
         if (id.isEmpty())
-            throw new UserServiceException(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
+            throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         //  throw other types of Exceptions
         //  throw new NullPointerException("the object is null");
         UserDto userDto = new UserDto();
@@ -70,9 +69,20 @@ public class UserController {
         return returnValue;
     }
 
-    @DeleteMapping
-    public String deleteUser() {
-        return "delete user was called";
+    @DeleteMapping(path = "/{id}",
+            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
+    )
+    public OperationStatusModel deleteUser(@PathVariable String id) {
+        OperationStatusModel returnValue = new OperationStatusModel();
+        returnValue.setOperationName(RequestOperationName.DELETE.name());
+        returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
+
+        if (id.isEmpty())
+            throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+
+        userService.deleteUser(id);
+
+        return returnValue;
     }
 
 }
