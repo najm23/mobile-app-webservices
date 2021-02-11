@@ -75,12 +75,12 @@ public class UserController {
     public OperationStatusModel deleteUser(@PathVariable String id) {
         OperationStatusModel returnValue = new OperationStatusModel();
         returnValue.setOperationName(RequestOperationName.DELETE.name());
-        returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
 
         if (id.isEmpty())
             throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
 
         userService.deleteUser(id);
+        returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
 
         return returnValue;
     }
